@@ -16,6 +16,7 @@
 #include "xrt/xrt_config.h"
 
 #include "vive/vive_config.h"
+#include "vive/vive_calibration.h"
 
 #include "tracking/t_hand_tracking.h"
 #include "tracking/t_frame_cv_mat_wrapper.hpp"
@@ -77,7 +78,8 @@ int main()
     oxr_sdl2_hack_create(&sdl2_hack);
 
     // zero-initialized out of paranoia
-    struct t_camera_extra_info info = {};
+    struct t_hand_tracking_create_info create_info = {};
+    struct t_camera_extra_info& info = create_info.cams_info;
 
     info.views[0].camera_orientation = CAMERA_ORIENTATION_0;
     info.views[1].camera_orientation = CAMERA_ORIENTATION_0;
@@ -99,7 +101,7 @@ int main()
     info.views[1].boundary.circle.normalized_radius = 0.55;
 
     struct t_hand_tracking_sync *sync =
-        t_hand_tracking_sync_mercury_create(calib, info, "C:\\dev\\mercury_steamvr_driver\\src\\steamvr_driver\\mercury\\resources\\internal\\hand-tracking-models\\");
+        t_hand_tracking_sync_mercury_create(calib, create_info, "C:\\dev\\mercury_steamvr_driver\\src\\steamvr_driver\\mercury\\resources\\internal\\hand-tracking-models\\");
 
     xrt_frame_context blah = {};
 

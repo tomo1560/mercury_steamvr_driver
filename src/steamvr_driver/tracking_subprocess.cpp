@@ -194,6 +194,11 @@ bool setup_camera_and_ht(subprocess_state &state)
 
     state.cap = cv::VideoCapture(match_idx, cv::CAP_MSMF, {cv::CAP_PROP_HW_ACCELERATION, cv::VIDEO_ACCELERATION_NONE});
 
+    // VIVE Pro Multimedia Camera is 640x480 by default but uses 612x460 on the HMD Config.
+    // Vive Pro Cam resolution list: https://forum.htc.com/topic/16703-how-to-access-the-front-stereo-pair-for-vive-pro-with-c-on-linux/#comment-55331
+    state.cap.set(cv::CAP_PROP_FRAME_WIDTH, 612);
+    state.cap.set(cv::CAP_PROP_FRAME_HEIGHT, 460 * 2);
+
     state.cap.set(cv::CAP_PROP_MODE, cv::VideoWriter::fourcc('Y', 'U', 'Y', 'V'));
     state.cap.set(cv::CAP_PROP_FPS, 54.0);
 
@@ -617,8 +622,12 @@ int main(int argc, char **argv)
         // xat::FrameMat fms[2]; // = {};
         xrt_frame *frames[2] = {NULL, NULL};
 
-        mats_grayscale[0] = mat(cv::Rect(0, 0, 960, 960));
-        mats_grayscale[1] = mat(cv::Rect(960, 0, 960, 960));
+        // Vive Pro Front cameras: Left=Bottom, Right=Top
+        // https://forum.htc.com/topic/9453-opencv-video-processing-with-srworks/?do=findComment&comment=55524
+        // left
+        mats_grayscale[0] = mat(cv::Rect(0, 460, 612, 460));
+        // right
+        mats_grayscale[1] = mat(cv::Rect(0, 0, 612, 460));
 
         for (int i = 0; i < 2; i++)
         {

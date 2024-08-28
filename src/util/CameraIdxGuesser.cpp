@@ -113,7 +113,7 @@ int GetIndexIndex()
         devlist.EnumerateDevices();
 
         // I've only seen Indices with these. Fingers crossed :)
-        const WCHAR *match = L"eTronVideo";
+        const WCHAR *match = L"VIVE Pro Multimedia Camera";
 
         for (uint32_t i = 0; i < devlist.Count(); i++)
         {
